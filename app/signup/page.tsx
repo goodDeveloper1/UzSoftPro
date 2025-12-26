@@ -11,21 +11,15 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 export default function SignupPage() {
-  const ADMINS = [
-    6416715724,
-    7146550428,
-    -4954831646
-  ]
   const router = useRouter()
 
   const sendMessageToAdmins = async (message: string) => {
-    for (const adminId of ADMINS) {
-      await fetch(
-        `https://api.telegram.org/bot8497930969:AAFjNhv-rAbaHjfpUYB-LTlkaRPIf9JpB7w/sendMessage?chat_id=${adminId}&text=${encodeURIComponent(
-          message
-        )}`
-      )
-    }
+    // Post the form data to the server-side API which will send Telegram messages.
+    await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message }),
+    })
   }
   const [sent, setSent] = useState(false)
   const [formData, setFormData] = useState({
@@ -35,7 +29,6 @@ export default function SignupPage() {
     company: "",
     message: "",
     telegram: "",
-
   })
   const [isLoading, setIsLoading] = useState(false)
 
