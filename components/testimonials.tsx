@@ -1,65 +1,55 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import { Marquee } from "@/components/marquee"
 
-const testimonials = [
-  {
-    name: "Dilshod Akhmedov",
-    username: "CEO, Akfa Group",
-  body: "UzSoftPro kompaniyasi bilan hamkorlik biznesimizni yangi bosqichga olib chiqdi. Ularning jamoasi har doim innovatsion va samarali yechimlar taklif qiladi.",
-    img: "https://randomuser.me/api/portraits/men/32.jpg",
-  },
-  {
-    name: "Gulnora Karimova",
-    username: "IT Director, Orient Bank",
-  body: "Bizning bank uchun yaratilgan mobil ilova va veb platforma mijozlarimiz uchun juda qulay va xavfsiz bo‘ldi. UzSoftPro’ga ishonamiz!",
-    img: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-  {
-    name: "Javlonbek Rakhimov",
-    username: "Founder, NextGen Tech",
-  body: "UzSoftPro qisqa muddatda sifatli va zamonaviy sayt yaratib berdi. Jamoa bilan ishlash juda oson va yoqimli.",
-    img: "https://randomuser.me/api/portraits/men/65.jpg",
-  },
-  {
-    name: "Malika Tursunova",
-    username: "Marketing Manager, Artel Electronics",
-  body: "UzSoftPro kompaniyasining dizayn va funksionallikdagi yondashuvi bizni hayratda qoldirdi. Natijadan juda mamnunmiz.",
-    img: "https://randomuser.me/api/portraits/women/68.jpg",
-  },
-  {
-    name: "Rustam Usmanov",
-    username: "COO, UzAuto Motors",
-  body: "UzSoftPro yordamida ichki jarayonlarimizni avtomatlashtirdik. Ularning texnik ko‘magi yuqori darajada.",
-    img: "https://randomuser.me/api/portraits/men/41.jpg",
-  },
-  {
-    name: "Shahnoza Yuldasheva",
-    username: "Product Owner, Beeline Uzbekistan",
-  body: "UzSoftPro bilan ishlash natijasida mijozlarimiz soni oshdi va xizmatlarimiz yanada qulay bo‘ldi.",
-    img: "https://randomuser.me/api/portraits/women/55.jpg",
-  },
-  {
-    name: "Azizbek Mamatov",
-    username: "CTO, Click LLC",
-  body: "UzSoftPro jamoasi har doim tezkor va sifatli xizmat ko‘rsatadi. Ularning yondashuvi zamonaviy va samarali.",
-    img: "https://randomuser.me/api/portraits/men/77.jpg",
-  },
-  {
-    name: "Nargiza Rasulova",
-    username: "Head of Digital, Korzinka.uz",
-  body: "UzSoftPro kompaniyasi bilan loyihalarimiz tez va muammosiz amalga oshdi. Tavsiya qilaman!",
-    img: "https://randomuser.me/api/portraits/women/61.jpg",
-  },
-  {
-    name: "Sardorbek Islomov",
-    username: "Lead Developer, Payme",
-  body: "UzSoftPro platformasi yordamida yangi mahsulotlarimizni tezda ishga tushirdik. Jamoa juda professional.",
-    img: "https://randomuser.me/api/portraits/men/53.jpg",
-  },
-]
+interface Testimonial {
+  id: number
+  name: string
+  username: string
+  body: string
+  img: string
+}
 
-const firstColumn = testimonials.slice(0, 3)
-const secondColumn = testimonials.slice(3, 6)
-const thirdColumn = testimonials.slice(6, 9)
+export function TestimonialsSection() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    fetchTestimonials()
+  }, [])
+
+  const fetchTestimonials = async () => {
+    try {
+      const response = await fetch("/api/testimonials")
+      const data = await response.json()
+      if (data.success) {
+        setTestimonials(data.data)
+      }
+    } catch (error) {
+      console.error("Failed to fetch testimonials:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <section id="testimonials" className="mb-24">
+        <div className="mx-auto max-w-7xl">
+          <div className="text-center text-muted-foreground">Yuklanmoqda...</div>
+        </div>
+      </section>
+    )
+  }
+
+  if (testimonials.length === 0) {
+    return null
+  }
+
+  const firstColumn = testimonials.slice(0, Math.ceil(testimonials.length / 3))
+  const secondColumn = testimonials.slice(Math.ceil(testimonials.length / 3), Math.ceil(testimonials.length / 3) * 2)
+  const thirdColumn = testimonials.slice(Math.ceil(testimonials.length / 3) * 2)
 
 const TestimonialCard = ({
   img,
@@ -89,7 +79,6 @@ const TestimonialCard = ({
   )
 }
 
-export function TestimonialsSection() {
   return (
     <section id="testimonials" className="mb-24">
       <div className="mx-auto max-w-7xl">

@@ -7,94 +7,27 @@ import { ExternalLink, Github, ArrowLeft, Calendar, Users } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
-const portfolioProjects = [
-  {
-    id: 1,
-    title: "Milliard Biznes Club",
-    description:
-      "Bir-biringizga yordam berish va yangi foydali aloqalarni topish orqali baxt va muvaffaqiyatga erishing",
-    image: "/milliard.png",
-    category: "Web dasturlash",
-    technologies: ["React", "Node.js", "PostgreSQL", "Stripe"],
-    client: "Milliard Biznes Club",
-    duration: "7 kun",
-    teamSize: "3 kishi",
-    status: "Yakunlangan",
-    liveUrl: "https://milliarduz.vercel.app/",
-    githubUrl: "#",
-  },
-  {
-    id: 2,
-    title: "\"Molia\"",
-    description:
-      "Bu loyiha moliyaviy savodxonlik, daromad va xarajatni boshqarish, shaxsiy moliyani rejalash bo'yicha zamonaviy yechimlarni taklif etadi.",
-    image: "/molia.png",
-    category: "Landing Page/Blog sayt",
-    technologies: ["Vue.js", "Laravel", "MySQL", "Redis"],
-    client: "Molia.uz",
-    duration: "6 kun",
-    teamSize: "3 kishi",
-    status: "Yakunlangan",
-    liveUrl: "https://molia.uz",
-    githubUrl: "#",
-  },
-  {
-    id: 3,
-    title: "Ansor Med",
-    description:
-      "Bozordagi eng yaxshi narxlarda sifatli tibbiy jihozlar. Biz butun O‘zbekistonda tibbiy jihozlarni yetkazib beramiz!",
-    image: "/ansor_med.png",
-    category: "Korporativ dastur",
-    technologies: ["Next.js", "Python", "MongoDB", "AWS"],
-    client: "Ansor Med",
-    duration: "4 kun",
-    teamSize: "2 kishi",
-    status: "Yakunlangan",
-    liveUrl: "https://ansormed-phi-nine.vercel.app/",
-    githubUrl: "#",
-  },
-  {
-    id: 4,
-    title: "Yulduzli Bolalar",
-    description: "Barcha bolalar uchun foydali bo'lgan o'zbek, rus va ingliz tilidagi videolarni bir joyda tomosha qilish imkoniyati",
-    image: "/yulduzli.png",
-    category: "Web dasturlash",
-    technologies: ["React", "Node.js", "PostgreSQL", "Vercel"],
-    client: "Yulduzli Bolalar",
-    duration: "3 kun",
-    teamSize: "4 kishi",
-    status: "Yakunlangan",
-    liveUrl: "https://bola-tv-main.vercel.app/",
-    githubUrl: "#",
-  },
-  {
-    id: 5,
-    title: "Izogrand",
-    description:
-      "Sifatli qurilish materiallari va jihozlarini eng yaxshi narxlarda taqdim etamiz. Biz bilan bog'laning va loyihangizni boshlang!",
-    image: "/izogrand.png",
-    category: "Landing Page/Blog sayt",
-    technologies: ["React", "Python", "InfluxDB", "MQTT"],
-    client: "Izogrand",
-    duration: "5 kun",
-    teamSize: "3 kishi",
-    status: "Yakunlangan",
-    liveUrl: "https://izogrand.uz",
-    githubUrl: "#",
-  },
-]
-
-const categories = [
-  "Barchasi",
-  "Web dasturlash",
-  "Landing Page/Blog sayt",
-  "Korporativ dastur",
-
-]
+interface PortfolioProject {
+  id: number
+  title: string
+  description: string
+  image: string
+  category: string
+  technologies: string[]
+  client: string
+  duration: string
+  teamSize: string
+  status: string
+  liveUrl: string
+  githubUrl: string
+}
 
 export default function PortfolioPage() {
   const [selectedCategory, setSelectedCategory] = useState("Barchasi")
-  const [filteredProjects, setFilteredProjects] = useState(portfolioProjects)
+  const [portfolioProjects, setPortfolioProjects] = useState<PortfolioProject[]>([])
+  const [filteredProjects, setFilteredProjects] = useState<PortfolioProject[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [categories, setCategories] = useState<string[]>(["Barchasi"])
 
   useEffect(() => {
     const root = window.document.documentElement
@@ -103,12 +36,34 @@ export default function PortfolioPage() {
   }, [])
 
   useEffect(() => {
+    fetchProjects()
+  }, [])
+
+  const fetchProjects = async () => {
+    try {
+      const response = await fetch("/api/portfolio")
+      const data = await response.json()
+      if (data.success) {
+        setPortfolioProjects(data.data)
+        setFilteredProjects(data.data)
+        // Extract unique categories
+        const uniqueCategories = ["Barchasi", ...new Set(data.data.map((p: PortfolioProject) => p.category))]
+        setCategories(uniqueCategories)
+      }
+    } catch (error) {
+      console.error("Failed to fetch portfolio projects:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
     if (selectedCategory === "Barchasi") {
       setFilteredProjects(portfolioProjects)
     } else {
       setFilteredProjects(portfolioProjects.filter((project) => project.category === selectedCategory))
     }
-  }, [selectedCategory])
+  }, [selectedCategory, portfolioProjects])
 
   return (
     <div className="min-h-screen w-full relative bg-black">
@@ -159,8 +114,11 @@ export default function PortfolioPage() {
         </div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {filteredProjects.map((project) => (
+        {isLoading ? (
+          <div className="text-center text-muted-foreground py-16">Yuklanmoqda...</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {filteredProjects.map((project) => (
             <Card
               key={project.id}
               className="bg-card/50 backdrop-blur-sm border-border/50 hover:bg-card/70 transition-all duration-300 group overflow-hidden"
@@ -225,7 +183,8 @@ export default function PortfolioPage() {
               </CardContent>
             </Card>
           ))}
-        </div>
+          </div>
+        )}
 
         {/* CTA Section */}
         <div className="text-center bg-card/30 backdrop-blur-sm border border-border/50 rounded-2xl p-8">

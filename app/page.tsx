@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import Hero from "@/components/hero"
 import Features from "@/components/features"
 import { TestimonialsSection } from "@/components/testimonials"
+import { VideosSection } from "@/components/videos-section"
 import { NewReleasePromo } from "@/components/new-release-promo"
 import { FAQSection } from "@/components/faq-section"
 import { StickyFooter } from "@/components/sticky-footer"
@@ -58,7 +59,7 @@ export default function Home() {
       <header
         className={`sticky top-4 z-[9999] mx-auto hidden w-full flex-row items-center justify-between self-start rounded-full bg-background/80 md:flex backdrop-blur-sm border border-border/50 shadow-lg transition-all duration-300 ${
           isScrolled ? "max-w-3xl px-2" : "max-w-5xl px-4"
-        } py-2`}
+        } py-2 mb-0`}
         style={{
           willChange: "transform",
           transform: "translateZ(0)",
@@ -151,6 +152,24 @@ export default function Home() {
           >
             <span className="relative z-20">Portfolio</span>
           </Link>
+          <a
+            className="relative px-4 py-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault()
+              const element = document.getElementById("videos")
+              if (element) {
+                const headerOffset = 120
+                const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+                const offsetPosition = elementPosition - headerOffset
+                window.scrollTo({
+                  top: offsetPosition,
+                  behavior: "smooth",
+                })
+              }
+            }}
+          >
+            <span className="relative z-20">Videolar</span>
+          </a>
           <a
             className="relative px-4 py-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             onClick={(e) => {
@@ -269,6 +288,26 @@ export default function Home() {
                 Portfolio
               </Link>
               <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false)
+                  setTimeout(() => {
+                    const element = document.getElementById("videos")
+                    if (element) {
+                      const headerOffset = 120
+                      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+                      const offsetPosition = elementPosition - headerOffset
+                      window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth",
+                      })
+                    }
+                  }, 100)
+                }}
+                className="text-left px-4 py-3 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-background/50"
+              >
+                Videolar
+              </button>
+              <button
                 onClick={() => handleMobileNavClick("faq")}
                 className="text-left px-4 py-3 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-background/50"
               >
@@ -295,6 +334,11 @@ export default function Home() {
 
       {/* Hero Section */}
       <Hero />
+
+      {/* Videos Section - Yangi raqamli imkoniyatlar dan keyin */}
+      <div id="videos">
+        <VideosSection />
+      </div>
 
       {/* Features Section */}
       <div id="features">
