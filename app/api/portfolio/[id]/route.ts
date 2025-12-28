@@ -1,16 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import db from '@/lib/db';
+import { getDataSource } from '@/lib/db';
+import { Portfolio } from '@/lib/entities/Portfolio';
 
 // GET single portfolio project
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  
   try {
-    const project = db.prepare('SELECT * FROM portfolio WHERE id = ?').get(params.id);
+    const dataSource = await getDataSource();
+    const portfolioRepo = dataSource.getRepository(Portfolio);
+    const project = await portfolioRepo.findOne({ where: { id: parseInt(id) } });
+    
     if (!project) {
       return NextResponse.json({ success: false, error: 'Portfolio project not found' }, { status: 404 });
     }
+    
     const projectWithParsedTech = {
       ...project,
-      technologies: typeof (project as any).technologies === 'string' ? JSON.parse((project as any).technologies) : (project as any).technologies,
+      technologies: typeof project.technologies === 'string' ? JSON.parse(project.technologies) : project.technologies,
     };
     return NextResponse.json({ success: true, data: projectWithParsedTech });
   } catch (error) {
@@ -19,7 +26,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PUT update portfolio project
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  
   try {
     const body = await request.json();
     const { title, description, image, category, technologies, client, duration, teamSize, status, liveUrl, githubUrl } = body;
@@ -30,27 +39,27 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     const technologiesJson = Array.isArray(technologies) ? JSON.stringify(technologies) : technologies;
 
-    const result = db
-      .prepare('UPDATE portfolio SET title = ?, description = ?, image = ?, category = ?, technologies = ?, client = ?, duration = ?, teamSize = ?, status = ?, liveUrl = ?, githubUrl = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
-      .run(
-        title,
-        description,
-        image || null,
-        category,
-        technologiesJson,
-        client || null,
-        duration || null,
-        teamSize || null,
-        status || 'Yakunlangan',
-        liveUrl || null,
-        githubUrl || null,
-        params.id
-      );
-
-    if (result.changes === 0) {
+    const dataSource = await getDataSource();
+    const portfolioRepo = dataSource.getRepository(Portfolio);
+    
+    const project = await portfolioRepo.findOne({ where: { id: parseInt(id) } });
+    if (!project) {
       return NextResponse.json({ success: false, error: 'Portfolio project not found' }, { status: 404 });
     }
 
+    project.title = title;
+    project.description = description;
+    project.image = image || undefined;
+    project.category = category;
+    project.technologies = technologiesJson;
+    project.client = client || undefined;
+    project.duration = duration || undefined;
+    project.teamSize = teamSize || undefined;
+    project.status = status || 'Yakunlangan';
+    project.liveUrl = liveUrl || undefined;
+    project.githubUrl = githubUrl || undefined;
+    
+    await portfolioRepo.save(project);
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to update portfolio project' }, { status: 500 });
@@ -58,14 +67,19 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE portfolio project
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  
   try {
-    const result = db.prepare('DELETE FROM portfolio WHERE id = ?').run(params.id);
-
-    if (result.changes === 0) {
+    const dataSource = await getDataSource();
+    const portfolioRepo = dataSource.getRepository(Portfolio);
+    
+    const project = await portfolioRepo.findOne({ where: { id: parseInt(id) } });
+    if (!project) {
       return NextResponse.json({ success: false, error: 'Portfolio project not found' }, { status: 404 });
     }
 
+    await portfolioRepo.remove(project);
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to delete portfolio project' }, { status: 500 });

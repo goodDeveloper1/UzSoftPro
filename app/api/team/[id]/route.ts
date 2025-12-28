@@ -1,16 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-import db from '@/lib/db';
+import { getDataSource } from '@/lib/db';
+import { Team } from '@/lib/entities/Team';
+import { deleteFromR2, extractR2Key } from '@/lib/r2';
 
 // GET single team member
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  
   try {
-    const member = db.prepare('SELECT * FROM team WHERE id = ?').get(params.id);
+    const dataSource = await getDataSource();
+    const teamRepo = dataSource.getRepository(Team);
+    const member = await teamRepo.findOne({ where: { id: parseInt(id) } });
+    
     if (!member) {
       return NextResponse.json({ success: false, error: 'Team member not found' }, { status: 404 });
     }
+    
     const memberWithParsedSkills = {
       ...member,
-      skills: typeof (member as any).skills === 'string' ? JSON.parse((member as any).skills) : (member as any).skills,
+      skills: typeof member.skills === 'string' ? JSON.parse(member.skills) : member.skills,
     };
     return NextResponse.json({ success: true, data: memberWithParsedSkills });
   } catch (error) {
@@ -19,7 +27,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PUT update team member
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  
   try {
     const body = await request.json();
     const { name, position, bio, image, skills, linkedin, github, email } = body;
@@ -30,14 +40,24 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     const skillsJson = Array.isArray(skills) ? JSON.stringify(skills) : skills;
 
-    const result = db
-      .prepare('UPDATE team SET name = ?, position = ?, bio = ?, image = ?, skills = ?, linkedin = ?, github = ?, email = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
-      .run(name, position, bio, image || null, skillsJson, linkedin || null, github || null, email || null, params.id);
-
-    if (result.changes === 0) {
+    const dataSource = await getDataSource();
+    const teamRepo = dataSource.getRepository(Team);
+    
+    const member = await teamRepo.findOne({ where: { id: parseInt(id) } });
+    if (!member) {
       return NextResponse.json({ success: false, error: 'Team member not found' }, { status: 404 });
     }
 
+    member.name = name;
+    member.position = position;
+    member.bio = bio;
+    member.image = image || undefined;
+    member.skills = skillsJson;
+    member.linkedin = linkedin || undefined;
+    member.github = github || undefined;
+    member.email = email || undefined;
+    
+    await teamRepo.save(member);
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to update team member' }, { status: 500 });
@@ -45,12 +65,28 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE team member
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  
   try {
-    const result = db.prepare('DELETE FROM team WHERE id = ?').run(params.id);
-
-    if (result.changes === 0) {
+    const dataSource = await getDataSource();
+    const teamRepo = dataSource.getRepository(Team);
+    
+    // Get team member data to extract image URL
+    const member = await teamRepo.findOne({ where: { id: parseInt(id) } });
+    
+    if (!member) {
       return NextResponse.json({ success: false, error: 'Team member not found' }, { status: 404 });
+    }
+
+    // Delete from database
+    await teamRepo.remove(member);
+
+    // Delete image from R2 (async, don't wait for it)
+    if (member.image) {
+      deleteFromR2(extractR2Key(member.image)).catch(err => 
+        console.error('Failed to delete team member image from R2:', err)
+      );
     }
 
     return NextResponse.json({ success: true });

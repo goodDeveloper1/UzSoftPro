@@ -47,7 +47,7 @@ export default function PortfolioPage() {
         setPortfolioProjects(data.data)
         setFilteredProjects(data.data)
         // Extract unique categories
-        const uniqueCategories = ["Barchasi", ...new Set(data.data.map((p: PortfolioProject) => p.category))]
+        const uniqueCategories = ["Barchasi", ...new Set(data.data.map((p: PortfolioProject) => p.category))] as string[]
         setCategories(uniqueCategories)
       }
     } catch (error) {

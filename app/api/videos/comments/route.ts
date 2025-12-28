@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import db from '@/lib/db';
+import { getDataSource } from '@/lib/db';
+import { VideoComment } from '@/lib/entities/VideoComment';
 
 // GET comments for a video
 export async function GET(request: NextRequest) {
@@ -11,8 +12,18 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Video ID required' }, { status: 400 });
     }
 
+    const dataSource = await getDataSource();
+    const commentRepo = dataSource.getRepository(VideoComment);
+    
     // Get approved comments only
-    const comments = db.prepare('SELECT * FROM video_comments WHERE video_id = ? AND is_approved = 1 ORDER BY created_at DESC').all(videoId);
+    const comments = await commentRepo.find({
+      where: { 
+        videoId: parseInt(videoId),
+        isApproved: 1 
+      },
+      order: { createdAt: 'DESC' }
+    });
+    
     return NextResponse.json({ success: true, data: comments });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to fetch comments' }, { status: 500 });
@@ -29,12 +40,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Video ID and comment required' }, { status: 400 });
     }
 
+    const dataSource = await getDataSource();
+    const commentRepo = dataSource.getRepository(VideoComment);
+    
     // Insert comment (not approved by default, admin will approve)
-    const result = db
-      .prepare('INSERT INTO video_comments (video_id, comment, author_name) VALUES (?, ?, ?)')
-      .run(video_id, comment, author_name || 'Anonim');
-
-    return NextResponse.json({ success: true, data: { id: result.lastInsertRowid } });
+    const newComment = commentRepo.create({
+      videoId: video_id,
+      comment,
+      authorName: author_name || 'Anonim',
+    });
+    
+    const result = await commentRepo.save(newComment);
+    return NextResponse.json({ success: true, data: { id: result.id } });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to create comment' }, { status: 500 });
   }

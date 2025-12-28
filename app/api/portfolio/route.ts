@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import db from '@/lib/db';
+import { getDataSource } from '@/lib/db';
+import { Portfolio } from '@/lib/entities/Portfolio';
 
 // GET all portfolio projects
 export async function GET() {
   try {
-    const projects = db.prepare('SELECT * FROM portfolio ORDER BY created_at DESC').all();
+    const dataSource = await getDataSource();
+    const portfolioRepo = dataSource.getRepository(Portfolio);
+    const projects = await portfolioRepo.find({ order: { createdAt: 'DESC' } });
+    
     // Parse technologies JSON string
-    const projectsWithParsedTech = projects.map((project: any) => ({
+    const projectsWithParsedTech = projects.map((project) => ({
       ...project,
       technologies: typeof project.technologies === 'string' ? JSON.parse(project.technologies) : project.technologies,
     }));
@@ -28,23 +32,25 @@ export async function POST(request: NextRequest) {
 
     const technologiesJson = Array.isArray(technologies) ? JSON.stringify(technologies) : technologies;
 
-    const result = db
-      .prepare('INSERT INTO portfolio (title, description, image, category, technologies, client, duration, teamSize, status, liveUrl, githubUrl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
-      .run(
-        title,
-        description,
-        image || null,
-        category,
-        technologiesJson,
-        client || null,
-        duration || null,
-        teamSize || null,
-        status || 'Yakunlangan',
-        liveUrl || null,
-        githubUrl || null
-      );
-
-    return NextResponse.json({ success: true, data: { id: result.lastInsertRowid } });
+    const dataSource = await getDataSource();
+    const portfolioRepo = dataSource.getRepository(Portfolio);
+    
+    const project = portfolioRepo.create({
+      title,
+      description,
+      image: image || undefined,
+      category,
+      technologies: technologiesJson,
+      client: client || undefined,
+      duration: duration || undefined,
+      teamSize: teamSize || undefined,
+      status: status || 'Yakunlangan',
+      liveUrl: liveUrl || undefined,
+      githubUrl: githubUrl || undefined,
+    });
+    
+    const result = await portfolioRepo.save(project);
+    return NextResponse.json({ success: true, data: { id: result.id } });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to create portfolio project' }, { status: 500 });
   }

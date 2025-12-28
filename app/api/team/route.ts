@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import db from '@/lib/db';
+import { getDataSource } from '@/lib/db';
+import { Team } from '@/lib/entities/Team';
 
 // GET all team members
 export async function GET() {
   try {
-    const team = db.prepare('SELECT * FROM team ORDER BY created_at DESC').all();
+    const dataSource = await getDataSource();
+    const teamRepo = dataSource.getRepository(Team);
+    const team = await teamRepo.find({ order: { createdAt: 'DESC' } });
+    
     // Parse skills JSON string
-    const teamWithParsedSkills = team.map((member: any) => ({
+    const teamWithParsedSkills = team.map((member) => ({
       ...member,
       skills: typeof member.skills === 'string' ? JSON.parse(member.skills) : member.skills,
     }));
@@ -28,11 +32,22 @@ export async function POST(request: NextRequest) {
 
     const skillsJson = Array.isArray(skills) ? JSON.stringify(skills) : skills;
 
-    const result = db
-      .prepare('INSERT INTO team (name, position, bio, image, skills, linkedin, github, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
-      .run(name, position, bio, image || null, skillsJson, linkedin || null, github || null, email || null);
-
-    return NextResponse.json({ success: true, data: { id: result.lastInsertRowid } });
+    const dataSource = await getDataSource();
+    const teamRepo = dataSource.getRepository(Team);
+    
+    const member = teamRepo.create({
+      name,
+      position,
+      bio,
+      image: image || undefined,
+      skills: skillsJson,
+      linkedin: linkedin || undefined,
+      github: github || undefined,
+      email: email || undefined,
+    });
+    
+    const result = await teamRepo.save(member);
+    return NextResponse.json({ success: true, data: { id: result.id } });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to create team member' }, { status: 500 });
   }

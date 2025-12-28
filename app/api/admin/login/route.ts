@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import db from '@/lib/db';
+import { getDataSource } from '@/lib/db';
+import { AdminUser } from '@/lib/entities/AdminUser';
 
 // POST login
 export async function POST(request: NextRequest) {
@@ -11,7 +12,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Email and password required' }, { status: 400 });
     }
 
-    const user = db.prepare('SELECT * FROM admin_users WHERE email = ?').get(email) as any;
+    const dataSource = await getDataSource();
+    const adminRepo = dataSource.getRepository(AdminUser);
+    const user = await adminRepo.findOne({ where: { email } });
 
     if (!user || user.password !== password) {
       return NextResponse.json({ success: false, error: 'Invalid credentials' }, { status: 401 });

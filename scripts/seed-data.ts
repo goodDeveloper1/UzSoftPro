@@ -1,14 +1,24 @@
-import db from '../lib/db';
+import 'reflect-metadata';
+import { getDataSource } from '../lib/db';
+import { Testimonial } from '../lib/entities/Testimonial';
+import { Team } from '../lib/entities/Team';
+import { Portfolio } from '../lib/entities/Portfolio';
 
 // Seed initial data
-const seedData = () => {
+const seedData = async () => {
+  const dataSource = await getDataSource();
+  
+  const testimonialRepo = dataSource.getRepository(Testimonial);
+  const teamRepo = dataSource.getRepository(Team);
+  const portfolioRepo = dataSource.getRepository(Portfolio);
+
   // Check if data already exists
-  const existingTestimonials = db.prepare('SELECT COUNT(*) as count FROM testimonials').get() as { count: number };
-  const existingTeam = db.prepare('SELECT COUNT(*) as count FROM team').get() as { count: number };
-  const existingPortfolio = db.prepare('SELECT COUNT(*) as count FROM portfolio').get() as { count: number };
+  const existingTestimonialsCount = await testimonialRepo.count();
+  const existingTeamCount = await teamRepo.count();
+  const existingPortfolioCount = await portfolioRepo.count();
 
   // Seed testimonials if empty
-  if (existingTestimonials.count === 0) {
+  if (existingTestimonialsCount === 0) {
     const testimonials = [
       {
         name: "Dilshod Akhmedov",
@@ -24,12 +34,15 @@ const seedData = () => {
       },
     ];
 
-    const insertTestimonial = db.prepare('INSERT INTO testimonials (name, username, body, img) VALUES (?, ?, ?, ?)');
-    testimonials.forEach((t) => insertTestimonial.run(t.name, t.username, t.body, t.img));
+    for (const t of testimonials) {
+      const testimonial = testimonialRepo.create(t);
+      await testimonialRepo.save(testimonial);
+    }
+    console.log('Testimonials seeded!');
   }
 
   // Seed team if empty
-  if (existingTeam.count === 0) {
+  if (existingTeamCount === 0) {
     const team = [
       {
         name: "Pardayev Husniddin",
@@ -43,12 +56,15 @@ const seedData = () => {
       },
     ];
 
-    const insertTeam = db.prepare('INSERT INTO team (name, position, bio, image, skills, linkedin, github, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-    team.forEach((m) => insertTeam.run(m.name, m.position, m.bio, m.image, m.skills, m.linkedin, m.github, m.email));
+    for (const m of team) {
+      const member = teamRepo.create(m);
+      await teamRepo.save(member);
+    }
+    console.log('Team seeded!');
   }
 
   // Seed portfolio if empty
-  if (existingPortfolio.count === 0) {
+  if (existingPortfolioCount === 0) {
     const portfolio = [
       {
         title: "Milliard Biznes Club",
@@ -65,12 +81,20 @@ const seedData = () => {
       },
     ];
 
-    const insertPortfolio = db.prepare('INSERT INTO portfolio (title, description, image, category, technologies, client, duration, teamSize, status, liveUrl, githubUrl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    portfolio.forEach((p) => insertPortfolio.run(p.title, p.description, p.image, p.category, p.technologies, p.client, p.duration, p.teamSize, p.status, p.liveUrl, p.githubUrl));
+    for (const p of portfolio) {
+      const project = portfolioRepo.create(p);
+      await portfolioRepo.save(project);
+    }
+    console.log('Portfolio seeded!');
   }
 
   console.log('Database seeded successfully!');
+  process.exit(0);
 };
 
-seedData();
+seedData().catch((error) => {
+  console.error('Error seeding data:', error);
+  process.exit(1);
+});
+
 

@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
-import { existsSync, mkdirSync } from 'fs';
+import { uploadToR2 } from '@/lib/r2';
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,45 +23,30 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Invalid image format. Only JPEG, PNG, WebP, and GIF are allowed.' }, { status: 400 });
     }
 
-    // Determine upload directory
-    let uploadDir = '';
+    // Determine R2 folder path
+    let folderPath = '';
     if (type === 'video') {
-      uploadDir = join(process.cwd(), 'public', 'uploads', 'videos');
+      folderPath = 'videos';
     } else if (type === 'team') {
-      uploadDir = join(process.cwd(), 'public', 'uploads', 'images', 'team');
+      folderPath = 'images/team';
     } else if (type === 'testimonial') {
-      uploadDir = join(process.cwd(), 'public', 'uploads', 'images', 'testimonials');
+      folderPath = 'images/testimonials';
     } else {
       return NextResponse.json({ success: false, error: 'Invalid type' }, { status: 400 });
-    }
-
-    // Create directory if it doesn't exist
-    if (!existsSync(uploadDir)) {
-      mkdirSync(uploadDir, { recursive: true });
     }
 
     // Generate unique filename
     const timestamp = Date.now();
     const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
     const filename = `${timestamp}_${originalName}`;
-    const filepath = join(uploadDir, filename);
+    const r2Key = `${folderPath}/${filename}`;
 
-    // Convert file to buffer and save
+    // Convert file to buffer and upload to R2
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    await writeFile(filepath, buffer);
+    const publicUrl = await uploadToR2(r2Key, buffer, file.type);
 
-    // Return the public URL
-    let publicUrl = '';
-    if (type === 'video') {
-      publicUrl = `/uploads/videos/${filename}`;
-    } else if (type === 'team') {
-      publicUrl = `/uploads/images/team/${filename}`;
-    } else if (type === 'testimonial') {
-      publicUrl = `/uploads/images/testimonials/${filename}`;
-    }
-
-    return NextResponse.json({ success: true, url: publicUrl, filename });
+    return NextResponse.json({ success: true, url: publicUrl, filename, key: r2Key });
   } catch (error) {
     console.error('Upload error:', error);
     return NextResponse.json({ success: false, error: 'Failed to upload file' }, { status: 500 });

@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import db from '@/lib/db';
+import { getDataSource } from '@/lib/db';
+import { Testimonial } from '@/lib/entities/Testimonial';
 
 // GET all testimonials
 export async function GET() {
   try {
-    const testimonials = db.prepare('SELECT * FROM testimonials ORDER BY created_at DESC').all();
+    const dataSource = await getDataSource();
+    const testimonialRepo = dataSource.getRepository(Testimonial);
+    const testimonials = await testimonialRepo.find({ order: { createdAt: 'DESC' } });
     return NextResponse.json({ success: true, data: testimonials });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to fetch testimonials' }, { status: 500 });
@@ -21,11 +24,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Missing required fields' }, { status: 400 });
     }
 
-    const result = db
-      .prepare('INSERT INTO testimonials (name, username, body, img) VALUES (?, ?, ?, ?)')
-      .run(name, username, testimonialBody, img || null);
-
-    return NextResponse.json({ success: true, data: { id: result.lastInsertRowid } });
+    const dataSource = await getDataSource();
+    const testimonialRepo = dataSource.getRepository(Testimonial);
+    
+    const testimonial = testimonialRepo.create({
+      name,
+      username,
+      body: testimonialBody,
+      img: img || undefined,
+    });
+    
+    const result = await testimonialRepo.save(testimonial);
+    return NextResponse.json({ success: true, data: { id: result.id } });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to create testimonial' }, { status: 500 });
   }
