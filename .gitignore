@@ -43,3 +43,13 @@ next-env.d.ts
 .vercel
 
 /public
+
+# database
+/data
+*.db
+*.sqlite
+*.sqlite3
+
+# uploads (keep structure but ignore files)
+/public/uploads/**
+!/public/uploads/.gitkeep

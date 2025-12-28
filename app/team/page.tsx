@@ -7,6 +7,18 @@ import { Github, Linkedin, Mail, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
+interface TeamMember {
+  id: number
+  name: string
+  position: string
+  bio: string
+  image: string
+  skills: string[]
+  linkedin: string
+  github: string
+  email: string
+}
+
 // const teamMembers = [
 //   {
 //     id: 1,
@@ -88,165 +100,36 @@ import Image from "next/image"
 //   },
 // ]
 
-const teamMembers = [
-  {
-    id: 1,
-    name: "Pardayev Husniddin",
-    position: "Bosh direktor va asoschi",
-    bio: "10 yildan ortiq tajribaga ega dasturiy ta'minot muhandisi. Startaplar va korporativ loyihalarni muvaffaqiyatli boshqargan.",
-    image: "/husniddin.JPG",
-    skills: ["Strategiya", "Boshqaruv", "Biznes tahlil"],
-    social: {
-      linkedin: "#",
-      github: "#",
-      email: "uzsoftpro@gmail.com",
-    },
-  },
-  {
-    id: 2,
-    name: "Jaloliddin Rahmatullayev",
-    position: "Fullstack dasturchi",
-    bio: "Full-stack dasturchi va arxitektor. Murakkab tizimlarni loyihalash va ishlab chiqishda mutaxassis.",
-    // image: "/.jpg",
-    skills: ["React", "Node.js", "Cloud Architecture", "Python", "Django", "Flask", "FastAPI"],
-    social: {
-      linkedin: "#",
-      github: "#",
-      email: "jaloliddinbek2008@gmail.com",
-    },
-  },
-  {
-    id: 3,
-    name: "Abdukarimov Oyatbek",
-    position: "Frontend dasturchi",
-    bio: "Zamonaviy web texnologiyalar bo'yicha mutaxassis. Foydalanuvchi tajribasini yaxshilashga e'tibor beradi.",
-    image: "/oyatbek.jpg",
-    skills: ["Html", "CSS", "Js", "React", "Next js", "Tailwind", "Bootstrap", "Figma", "git", "Github", "Google sheets", "app script", "looker studio", "Firebase", "MongoDb",],
-    social: {
-      linkedin: "#",
-      github: "https://github.com/abdukarimov0990",
-      email: "oyatbek09@gmail.com",
-    },
-  },
-  {
-    id: 4,
-    name: "Ruslan Inoyatov",
-    position: "Backend dasturchi",
-    bio: "Ma'lumotlar bazasi va server tomonidagi dasturlash bo'yicha tajribali mutaxassis.",
-    image: "/ruslan.jpg",
-    skills: ["Python", "PostgreSQL", "API Design"],
-    social: {
-      linkedin: "#",
-      github: "#",
-      email: "ruslaninoyatov100@gmail.com",
-    },
-  },
-  {
-    id: 5,
-    name: "Axmedov Xusniddin",
-    position: "fullstack Software Engineer",
-    bio: "Cloud infratuzilma va CI/CD jarayonlarini optimallashtirish bo'yicha mutaxassis.",
-    image: "/ahmedov.jpg",
-    skills: ["AWS", "Docker", "Kubernetes"],
-    social: {
-      linkedin: "#",
-      github: "#",
-      email: "axmedovxusniddin67@gmail.com",
-    },
-  },
-  {
-    id: 6,
-    name: "Sharofat Shuxratovna",
-    position: "operator",
-    bio: "Mijozlar bilan muloqot qilish, qo‘ng‘iroqlarni boshqarish va buyurtmalarni qayd qilishda tajribaga ega. Har bir mijozga e’tiborli va samimiy yondashadi.",
-
-    image: "/sharofat.jpg",
-    skills: ["Mijozlar bilan muloqot", "Telefon qo‘ng‘iroqlarini boshqarish", "Ma’lumotlarni qayd qilish", "Sabr-toqat va e’tibor"],
-    social: {
-      linkedin: "#",
-      github: "#",
-      email: "radjabovasharofat856@gmail.com",
-    },
-  },
-  {
-    id: 7,
-    name: "Ibrohim Abrolov",
-    position: "UI/UX designer",
-    bio: "Foydalanuvchiga qulag interfeys qilish",
-
-    image: "/ibrohim.JPG",
-    skills: ["Time-management", "masulaytli bolish", "Kirishimlik", "Figma", "framer", "UI/UX", "App", "Web"],
-    social: {
-      linkedin: "#",
-      github: "#",
-      email: "ibrohimabrolov2005@gmail.com",
-    },
-  },
-  {
-    id: 8,
-    name: "Robiya Abdushukurova",
-    position: "UX/UI Designer",
-    bio: "Foydalanuvchiga qulay interfeys yaratish.",
-    image: "/robiya.jpg",
-    skills: ["UX/UI", "Web sayt yaratish", "Mobil ilova (App)", "Figma", "Adobe Photoshop", "Chiqishimli", "Mas’uliyatli"],
-    social: {
-      linkedin: "https://www.linkedin.com/in/robiya-abdushukurova?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
-      github: "#",
-      email: "rsaeva58@gmail.com",
-    },
-  },
-  {
-  id: 9,
-  name: "Asadbek Inomjonov",
-  position: "UI/UX designer",
-  bio:   "O'z ishini sitqidildan va sifatli va tez qilish",
-
-image: "/asadbek.jpg",
-skills: ["Time-management", "masulaytli bolish", "Kirishimlik", "Figma", "framer", "UI/UX","App","Web"],
-social: {
-  linkedin: "#",
-  github: "#",
-  email: "ibbasad3@gmail.com",
-},
-  },
-
- { id: 10,
-name: "Otabek To’ychiyev",
-position: "iOS Developer",
-bio: "Foydalanuvchiga qulay mobil ilovalar yaratish.",
-image: "/otabek.png",
-skills: ["iOS SDK", "Mobil ilova (App)", "Figma", "AI qurilmalar", "Kirishimli", "Mas’uliyatli"],
-social: {
-  linkedin: "https://www.linkedin.com/in/otabek-tuychiev-725977224/",
-  github: "https://github.com/Denis13tm?tab=repositories",
-  email: "otawflash@gmail.com",
-},
-},
-{
-  id: 11,
-name: "Asqarjon Umarxonov",
-position: "Fullstack Developer",
-image: "/asqarjon.jpg",
-bio: "Zamonaviy veb ilovalar yaratishda tajribali fullstack dasturchi. React, Node.js va MongoDB texnologiyalarida ishlayman.",
-skills: ["React", "Node.js", "MongoDB", "Express.js", "TailwindCSS", "Socket.IO", "Redux Toolkit", "RTK Query"],
-social: {
-  linkedin: "https://www.linkedin.com/in/asqarjon-umarxonov-185024338",
-  github: "https://github.com/Asqarjon10dev",
-  email: "asqarjonumarxonov1010@gmail.com"
-},
-
-}
-]
 
 
 export default function TeamPage() {
   const [isScrolled, setIsScrolled] = useState(false)
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const root = window.document.documentElement
     root.classList.remove("light", "system")
     root.classList.add("dark")
   }, [])
+
+  useEffect(() => {
+    fetchTeamMembers()
+  }, [])
+
+  const fetchTeamMembers = async () => {
+    try {
+      const response = await fetch("/api/team")
+      const data = await response.json()
+      if (data.success) {
+        setTeamMembers(data.data)
+      }
+    } catch (error) {
+      console.error("Failed to fetch team members:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -292,8 +175,11 @@ export default function TeamPage() {
         </div>
 
         {/* Team Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {teamMembers.map((member) => (
+        {isLoading ? (
+          <div className="text-center text-muted-foreground py-16">Yuklanmoqda...</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {teamMembers.map((member) => (
             <Card
               key={member.id}
               className="bg-card/50 backdrop-blur-sm border-border/50 hover:bg-card/70 transition-all duration-300 group"
@@ -323,20 +209,27 @@ export default function TeamPage() {
 
                 {/* Social Links */}
                 <div className="flex justify-center gap-3">
-                  <Button size="sm" variant="ghost" className="w-8 h-8 p-0">
-                    <Linkedin className="w-4 h-4" />
-                  </Button>
-                  <Button size="sm" variant="ghost" className="w-8 h-8 p-0">
-                    <Github className="w-4 h-4" />
-                  </Button>
-                  <Button size="sm" variant="ghost" className="w-8 h-8 p-0">
-                    <Mail className="w-4 h-4" />
-                  </Button>
+                  {member.linkedin && member.linkedin !== "#" && (
+                    <Button size="sm" variant="ghost" className="w-8 h-8 p-0" onClick={() => window.open(member.linkedin, "_blank")}>
+                      <Linkedin className="w-4 h-4" />
+                    </Button>
+                  )}
+                  {member.github && member.github !== "#" && (
+                    <Button size="sm" variant="ghost" className="w-8 h-8 p-0" onClick={() => window.open(member.github, "_blank")}>
+                      <Github className="w-4 h-4" />
+                    </Button>
+                  )}
+                  {member.email && (
+                    <Button size="sm" variant="ghost" className="w-8 h-8 p-0" onClick={() => window.location.href = `mailto:${member.email}`}>
+                      <Mail className="w-4 h-4" />
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>
           ))}
-        </div>
+          </div>
+        )}
 
         {/* CTA Section */}
         <div className="text-center bg-card/30 backdrop-blur-sm border border-border/50 rounded-2xl p-8">
