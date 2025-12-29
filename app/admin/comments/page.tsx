@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, Check, X, Trash2, MessageCircle } from "lucide-react"
+import { ArrowLeft, Check, Trash2, MessageCircle } from "lucide-react"
 
 interface Comment {
   id: number
@@ -141,7 +141,7 @@ export default function AdminComments() {
                   <CardContent className="p-6">
                     <div className="flex gap-4">
                       {comment.video_thumbnail && (
-                        <img src={comment.video_thumbnail} alt={comment.video_title} className="w-20 h-20 rounded-lg object-cover" />
+                        <img src={comment.video_thumbnail} alt={comment.video_title} width="80" height="80" className="rounded-lg object-cover" />
                       )}
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
@@ -182,14 +182,14 @@ export default function AdminComments() {
           <h2 className="text-2xl font-bold text-foreground mb-6">Tasdiqlangan commentlar ({approvedComments.length})</h2>
           <div className="space-y-4">
             {approvedComments.length === 0 ? (
-              <p className="text-muted-foreground text-center py-8">Tasdiqlangan commentlar yo'q</p>
+              <p className="text-muted-foreground text-center py-8">Tasdiqlangan commentlar yo&apos;q</p>
             ) : (
               approvedComments.map((comment) => (
                 <Card key={comment.id} className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="p-6">
                     <div className="flex gap-4">
                       {comment.video_thumbnail && (
-                        <img src={comment.video_thumbnail} alt={comment.video_title} className="w-20 h-20 rounded-lg object-cover" />
+                        <img src={comment.video_thumbnail} alt={comment.video_title} width="80" height="80" className="rounded-lg object-cover" />
                       )}
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">

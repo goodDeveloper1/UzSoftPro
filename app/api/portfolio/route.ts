@@ -15,7 +15,7 @@ export async function GET() {
       technologies: typeof project.technologies === 'string' ? JSON.parse(project.technologies) : project.technologies,
     }));
     return NextResponse.json({ success: true, data: projectsWithParsedTech });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to fetch portfolio projects' }, { status: 500 });
   }
 }
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     
     const result = await portfolioRepo.save(project);
     return NextResponse.json({ success: true, data: { id: result.id } });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to create portfolio project' }, { status: 500 });
   }
 }

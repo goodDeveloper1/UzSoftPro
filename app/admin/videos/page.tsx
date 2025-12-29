@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ArrowLeft, Plus, Edit, Trash2, Save, X, Play, Upload, Loader2 } from "lucide-react"
+import { ArrowLeft, Plus, Edit, Trash2, Save, X, Play, Loader2 } from "lucide-react"
 
 interface Video {
   id: number
@@ -217,7 +217,7 @@ export default function AdminVideos() {
           <h1 className="text-lg font-semibold text-foreground">Videolar</h1>
           <Button onClick={() => setIsAdding(true)} size="sm">
             <Plus className="w-4 h-4 mr-2" />
-            Qo'shish
+            Qo&apos;shish
           </Button>
         </div>
       </header>
@@ -226,7 +226,7 @@ export default function AdminVideos() {
         {isAdding && (
           <Card className="bg-card/50 backdrop-blur-sm border-border/50 mb-6">
             <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Yangi video qo'shish</h2>
+              <h2 className="text-xl font-semibold mb-4">Yangi video qo&apos;shish</h2>
               <div className="space-y-4">
                 <div>
                   <Label>Sarlavha</Label>
@@ -294,7 +294,7 @@ export default function AdminVideos() {
                     onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
                     className="rounded border-zinc-700 bg-zinc-800 text-[#e78a53]"
                   />
-                  <Label htmlFor="is_active">Faol (saytda ko'rinadi)</Label>
+                  <Label htmlFor="is_active">Faol (saytda ko&apos;rinadi)</Label>
                 </div>
                 <div className="flex gap-2">
                   <Button onClick={handleAdd}>
@@ -411,12 +411,12 @@ export default function AdminVideos() {
                     {video.description && <p className="text-sm text-muted-foreground mb-2">{video.description}</p>}
                     <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
                       <span>{video.category}</span>
-                      <span>{video.views} ko'rish</span>
+                      <span>{video.views} ko&apos;rish</span>
                     </div>
                     <div className="flex gap-2">
                       <Button onClick={() => window.open(video.video_url, "_blank")} variant="outline" size="sm">
                         <Play className="w-4 h-4 mr-2" />
-                        Ko'rish
+                        Ko&apos;rish
                       </Button>
                       <Button onClick={() => startEdit(video)} variant="outline" size="sm">
                         <Edit className="w-4 h-4" />

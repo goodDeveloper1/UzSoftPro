@@ -9,7 +9,7 @@ export default function FollowingPointerDemo() {
             <img
               src={blogContent.image || "/placeholder.svg"}
               alt="thumbnail"
-              className="h-full transform object-cover transition duration-200 group-hover:scale-95 group-hover:rounded-2xl"
+              className="h-full w-full transform object-cover transition duration-200 group-hover:scale-95 group-hover:rounded-2xl"
             />
           </div>
           <div className="p-4">

@@ -152,7 +152,7 @@ export default function Home() {
           >
             <span className="relative z-20">Portfolio</span>
           </Link>
-          <a
+          {/* <a
             className="relative px-4 py-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             onClick={(e) => {
               e.preventDefault()
@@ -169,7 +169,7 @@ export default function Home() {
             }}
           >
             <span className="relative z-20">Videolar</span>
-          </a>
+          </a> */}
           <a
             className="relative px-4 py-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             onClick={(e) => {
@@ -287,7 +287,7 @@ export default function Home() {
               >
                 Portfolio
               </Link>
-              <button
+              {/* <button
                 onClick={() => {
                   setIsMobileMenuOpen(false)
                   setTimeout(() => {
@@ -306,7 +306,7 @@ export default function Home() {
                 className="text-left px-4 py-3 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-background/50"
               >
                 Videolar
-              </button>
+              </button> */}
               <button
                 onClick={() => handleMobileNavClick("faq")}
                 className="text-left px-4 py-3 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-background/50"
@@ -332,13 +332,14 @@ export default function Home() {
         </div>
       )}
 
+      {/* Videos Section - Yangi raqamli imkoniyatlar dan keyin */}
+      <div id="videos" className="mb-[-80px]">
+        <VideosSection />
+      </div>
+
       {/* Hero Section */}
       <Hero />
 
-      {/* Videos Section - Yangi raqamli imkoniyatlar dan keyin */}
-      <div id="videos">
-        <VideosSection />
-      </div>
 
       {/* Features Section */}
       <div id="features">

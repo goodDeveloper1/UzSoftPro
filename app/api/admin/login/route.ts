@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
     // In production, use JWT tokens or sessions
     return NextResponse.json({ success: true, data: { email: user.email, id: user.id } });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to login' }, { status: 500 });
   }
 }

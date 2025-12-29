@@ -21,7 +21,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       skills: typeof member.skills === 'string' ? JSON.parse(member.skills) : member.skills,
     };
     return NextResponse.json({ success: true, data: memberWithParsedSkills });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to fetch team member' }, { status: 500 });
   }
 }
@@ -59,7 +59,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     
     await teamRepo.save(member);
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to update team member' }, { status: 500 });
   }
 }
@@ -90,7 +90,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     }
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to delete team member' }, { status: 500 });
   }
 }

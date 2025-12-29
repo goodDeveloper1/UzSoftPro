@@ -15,7 +15,7 @@ export async function GET() {
       skills: typeof member.skills === 'string' ? JSON.parse(member.skills) : member.skills,
     }));
     return NextResponse.json({ success: true, data: teamWithParsedSkills });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to fetch team members' }, { status: 500 });
   }
 }
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     
     const result = await teamRepo.save(member);
     return NextResponse.json({ success: true, data: { id: result.id } });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to create team member' }, { status: 500 });
   }
 }

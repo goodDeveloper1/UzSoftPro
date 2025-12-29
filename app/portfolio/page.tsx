@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Github, ArrowLeft, Calendar, Users } from "lucide-react"
 import Link from "next/link"
-import Image from "next/image"
 
 interface PortfolioProject {
   id: number
@@ -124,9 +123,9 @@ export default function PortfolioPage() {
               className="bg-card/50 backdrop-blur-sm border-border/50 hover:bg-card/70 transition-all duration-300 group overflow-hidden"
             >
               <div className="relative">
-                <Image
-                  width={400}
-                  height={192}
+                <img
+                  width="400"
+                  height="192"
                   src={project.image || "/placeholder.svg"}
                   alt={project.title}
                   className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
@@ -174,7 +173,7 @@ export default function PortfolioPage() {
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" className="flex-1 bg-transparent" onClick={() => window.open(project.liveUrl, "_blank")}>
                     <ExternalLink className="w-4 h-4 mr-2" />
-                    Ko'rish
+                    Ko&apos;rish
                   </Button>
                   <Button size="sm" variant="ghost" className="w-10 h-8 p-0">
                     <Github className="w-4 h-4" />
@@ -192,7 +191,7 @@ export default function PortfolioPage() {
             Sizning loyihangizni muhokama qilaylikmi?
           </h2>
           <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Bizning tajribamiz sizning g'oyalaringizni hayotga tatbiq etishda yordam beradi. Keling, birgalikda ajoyib
+            Bizning tajribamiz sizning g&apos;oyalaringizni hayotga tatbiq etishda yordam beradi. Keling, birgalikda ajoyib
             narsalar yarataylik.
           </p>
           <Button size="lg" className="bg-primary hover:bg-primary/90"

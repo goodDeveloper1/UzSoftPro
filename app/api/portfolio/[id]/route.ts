@@ -20,7 +20,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       technologies: typeof project.technologies === 'string' ? JSON.parse(project.technologies) : project.technologies,
     };
     return NextResponse.json({ success: true, data: projectWithParsedTech });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to fetch portfolio project' }, { status: 500 });
   }
 }
@@ -61,7 +61,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     
     await portfolioRepo.save(project);
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to update portfolio project' }, { status: 500 });
   }
 }
@@ -81,7 +81,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
     await portfolioRepo.remove(project);
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to delete portfolio project' }, { status: 500 });
   }
 }

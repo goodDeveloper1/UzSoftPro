@@ -37,7 +37,7 @@ export async function GET() {
     }));
     
     return NextResponse.json({ success: true, data: formattedComments });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to fetch comments' }, { status: 500 });
   }
 }
@@ -70,7 +70,7 @@ export async function PUT(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to update comment' }, { status: 500 });
   }
 }

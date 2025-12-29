@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ArrowLeft, Plus, Edit, Trash2, Save, X, Upload, Loader2 } from "lucide-react"
+import { ArrowLeft, Plus, Edit, Trash2, Save, X, Loader2 } from "lucide-react"
 
 interface TeamMember {
   id: number
@@ -191,10 +191,10 @@ export default function AdminTeam() {
             <ArrowLeft className="w-5 h-5" />
             <span className="font-medium">Dashboard</span>
           </Link>
-          <h1 className="text-lg font-semibold text-foreground">Jamoa a'zolari</h1>
+          <h1 className="text-lg font-semibold text-foreground">Jamoa a&apos;zolari</h1>
           <Button onClick={() => setIsAdding(true)} size="sm">
             <Plus className="w-4 h-4 mr-2" />
-            Qo'shish
+            Qo&apos;shish
           </Button>
         </div>
       </header>
@@ -203,7 +203,7 @@ export default function AdminTeam() {
         {isAdding && (
           <Card className="bg-card/50 backdrop-blur-sm border-border/50 mb-6">
             <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Yangi jamoa a'zosi qo'shish</h2>
+              <h2 className="text-xl font-semibold mb-4">Yangi jamoa a&apos;zosi qo&apos;shish</h2>
               <div className="space-y-4">
                 <div>
                   <Label>Ism</Label>
@@ -241,7 +241,7 @@ export default function AdminTeam() {
                   <Input value={formData.image} onChange={(e) => setFormData({ ...formData, image: e.target.value })} placeholder="https://example.com/image.jpg" className="mt-1" />
                 </div>
                 <div>
-                  <Label>Ko'nikmalar (vergul bilan ajratilgan)</Label>
+                  <Label>Ko&apos;nikmalar (vergul bilan ajratilgan)</Label>
                   <Input value={formData.skills} onChange={(e) => setFormData({ ...formData, skills: e.target.value })} placeholder="React, Node.js, Python" />
                 </div>
                 <div>
@@ -313,7 +313,7 @@ export default function AdminTeam() {
                       <Input value={formData.image} onChange={(e) => setFormData({ ...formData, image: e.target.value })} placeholder="https://example.com/image.jpg" className="mt-1" />
                     </div>
                     <div>
-                      <Label>Ko'nikmalar</Label>
+                      <Label>Ko&apos;nikmalar</Label>
                       <Input value={formData.skills} onChange={(e) => setFormData({ ...formData, skills: e.target.value })} />
                     </div>
                     <div>
@@ -340,7 +340,7 @@ export default function AdminTeam() {
                 ) : (
                   <>
                     <div className="text-center mb-4">
-                      <img src={member.image || "/placeholder.svg"} alt={member.name} className="w-24 h-24 rounded-full mx-auto mb-4 object-cover" />
+                      <img src={member.image || "/placeholder.svg"} alt={member.name} width="96" height="96" className="rounded-full mx-auto mb-4 object-cover" />
                       <h3 className="font-semibold text-lg">{member.name}</h3>
                       <p className="text-primary">{member.position}</p>
                       <p className="text-sm text-muted-foreground mt-2">{member.bio}</p>

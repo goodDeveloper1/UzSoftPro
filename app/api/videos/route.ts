@@ -12,7 +12,7 @@ export async function GET() {
       order: { createdAt: 'DESC' } 
     });
     return NextResponse.json({ success: true, data: videos });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to fetch videos' }, { status: 500 });
   }
 }
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     
     const result = await videoRepo.save(video);
     return NextResponse.json({ success: true, data: { id: result.id } });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to create video' }, { status: 500 });
   }
 }

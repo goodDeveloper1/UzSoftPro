@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     });
     
     return NextResponse.json({ success: true, data: comments });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to fetch comments' }, { status: 500 });
   }
 }
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     
     const result = await commentRepo.save(newComment);
     return NextResponse.json({ success: true, data: { id: result.id } });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to create comment' }, { status: 500 });
   }
 }

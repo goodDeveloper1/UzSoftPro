@@ -94,7 +94,7 @@ export default function AboutPage() {
             <span className="text-primary">Raqamli yechimlar</span> kompaniyasi
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto text-pretty">
-            Biz O'zbekistonda faoliyat yurituvchi raqamli yechimlar kompaniyasimiz. Bizning maqsadimiz - zamonaviy
+            Biz O&apos;zbekistonda faoliyat yurituvchi raqamli yechimlar kompaniyasimiz. Bizning maqsadimiz - zamonaviy
             texnologiyalar orqali bizneslaringizni rivojlantirishga yordam berish.
           </p>
         </div>
@@ -117,13 +117,13 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold text-foreground mb-6">Bizning hikoyamiz</h2>
             <div className="space-y-4 text-muted-foreground leading-relaxed">
               <p>
-                2019-yilda tashkil etilgan kompaniyamiz O'zbekiston bozorida raqamli transformatsiya sohasida yetakchi
-                o'rinlardan birini egallaydi. Biz kichik startaplardan tortib, yirik korporatsiyalargacha turli
+                2019-yilda tashkil etilgan kompaniyamiz O&apos;zbekiston bozorida raqamli transformatsiya sohasida yetakchi
+                o&apos;rinlardan birini egallaydi. Biz kichik startaplardan tortib, yirik korporatsiyalargacha turli
                 darajadagi mijozlar bilan ishlaymiz.
               </p>
               <p>
                 Bizning asosiy kuchimiz - bu tajribali mutaxassislar jamoasi va zamonaviy texnologiyalardan foydalanish.
-                Har bir loyihaga individual yondashuv va mijozning ehtiyojlarini to'liq qondirish bizning asosiy
+                Har bir loyihaga individual yondashuv va mijozning ehtiyojlarini to&apos;liq qondirish bizning asosiy
                 tamoyilimizdir.
               </p>
               <p>
@@ -132,11 +132,11 @@ export default function AboutPage() {
               </p>
             </div>
           </div>
-          <div>
+          <div className="relative">
             <img
               src="/modern-office-team-working-uzbekistan.jpg"
               alt="Bizning jamoa"
-              className="rounded-2xl w-full h-full object-cover"
+              className="w-full h-full rounded-2xl object-cover"
             />
           </div>
         </div>
@@ -186,8 +186,8 @@ export default function AboutPage() {
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold text-foreground mb-4">Bizning missiyamiz</h3>
               <p className="text-muted-foreground leading-relaxed">
-                O'zbekiston bizneslarini raqamli transformatsiya orqali zamonaviy darajaga olib chiqish va ularning
-                raqobatbardoshligini oshirish. Har bir mijozga individual yondashuv va yuqori sifatli xizmat ko'rsatish.
+                O&apos;zbekiston bizneslarini raqamli transformatsiya orqali zamonaviy darajaga olib chiqish va ularning
+                raqobatbardoshligini oshirish. Har bir mijozga individual yondashuv va yuqori sifatli xizmat ko&apos;rsatish.
               </p>
             </CardContent>
           </Card>
@@ -195,8 +195,8 @@ export default function AboutPage() {
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold text-foreground mb-4">Bizning viziyamiz</h3>
               <p className="text-muted-foreground leading-relaxed">
-                O'rta Osiyoda raqamli yechimlar sohasida yetakchi kompaniya bo'lish va mintaqadagi raqamli iqtisodiyot
-                rivojlanishiga hissa qo'shish. Innovatsion texnologiyalar orqali jamiyat hayotini yaxshilash.
+                O&apos;rta Osiyoda raqamli yechimlar sohasida yetakchi kompaniya bo&apos;lish va mintaqadagi raqamli iqtisodiyot
+                rivojlanishiga hissa q&apos;oshish. Innovatsion texnologiyalar orqali jamiyat hayotini yaxshilash.
               </p>
             </CardContent>
           </Card>
@@ -204,17 +204,17 @@ export default function AboutPage() {
 
         {/* CTA Section */}
         <div className="text-center bg-card/30 backdrop-blur-sm border border-border/50 rounded-2xl p-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Bizning jamoaga qo'shiling!</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Bizning jamoaga q&apos;oshiling!</h2>
           <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Sizning loyihangizni muhokama qilish uchun biz bilan bog'laning. Birgalikda ajoyib raqamli yechimlar
+            Sizning loyihangizni muhokama qilish uchun biz bilan bog&apos;laning. Birgalikda ajoyib raqamli yechimlar
             yarataylik.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="bg-primary hover:bg-primary/90">
-              Biz bilan bog'lanish
+              Biz bilan bog&apos;lanish
             </Button>
             <Button size="lg" variant="outline">
-              Portfolio ko'rish
+              Portfolio ko&apos;rish
             </Button>
           </div>
         </div>

@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Github, Linkedin, Mail, ArrowLeft } from "lucide-react"
 import Link from "next/link"
-import Image from "next/image"
 
 interface TeamMember {
   id: number
@@ -103,7 +102,6 @@ interface TeamMember {
 
 
 export default function TeamPage() {
-  const [isScrolled, setIsScrolled] = useState(false)
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -130,15 +128,6 @@ export default function TeamPage() {
       setIsLoading(false)
     }
   }
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100)
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
 
   return (
     <div className="min-h-screen w-full relative bg-black">
@@ -169,7 +158,7 @@ export default function TeamPage() {
             Bizning <span className="text-primary">professional</span> jamoa
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto text-pretty">
-            Har bir a'zo o'z sohasida tajribali mutaxassis. Biz birgalikda sizning raqamli yechimlaringizni hayotga
+            Har bir a&apos;zo o&apos;z sohasida tajribali mutaxassis. Biz birgalikda sizning raqamli yechimlaringizni hayotga
             tatbiq etamiz.
           </p>
         </div>
@@ -186,11 +175,11 @@ export default function TeamPage() {
             >
               <CardContent className="p-6">
                 <div className="text-center mb-4">
-                  <Image
+                  <img
   src={member.image ? member.image : "/placeholder.svg"}
   alt={member.name || "User"}
-  width={96}
-  height={96}
+  width="96"
+  height="96"
   className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-2 border-primary/20 group-hover:border-primary/40 transition-colors"
 />
                   <h3 className="text-xl font-semibold text-foreground mb-1">{member.name}</h3>
@@ -233,14 +222,14 @@ export default function TeamPage() {
 
         {/* CTA Section */}
         <div className="text-center bg-card/30 backdrop-blur-sm border border-border/50 rounded-2xl p-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Bizga qo'shiling!</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Bizga qo&apos;shiling!</h2>
           <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Agar siz ham raqamli yechimlar sohasida ishlashni istasangiz, bizning jamoamizga qo'shiling. Biz doimo
+            Agar siz ham raqamli yechimlar sohasida ishlashni istasangiz, bizning jamoamizga qo&apos;shiling. Biz doimo
             iqtidorli mutaxassislarni qidiramiz.
           </p>
           <Button size="lg" className="bg-primary hover:bg-primary/90"
             onClick={() => window.location.href = "https://t.me/GavharGoIshBot"}>
-            Vakansiyalarni ko'rish
+            Vakansiyalarni ko&apos;rish
           </Button>
         </div>
       </div>

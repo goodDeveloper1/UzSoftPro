@@ -9,7 +9,7 @@ export async function GET() {
     const testimonialRepo = dataSource.getRepository(Testimonial);
     const testimonials = await testimonialRepo.find({ order: { createdAt: 'DESC' } });
     return NextResponse.json({ success: true, data: testimonials });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to fetch testimonials' }, { status: 500 });
   }
 }
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     
     const result = await testimonialRepo.save(testimonial);
     return NextResponse.json({ success: true, data: { id: result.id } });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false, error: 'Failed to create testimonial' }, { status: 500 });
   }
 }

@@ -41,7 +41,7 @@ export default function Hero() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="mb-8"
             >
-              <h1 id="main-title" className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl">
+              <h1 id="main-title" className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
                 Biznesingiz uchun <strong>zamonaviy</strong> <span>va</span> <br />
                 <strong>innovatsion</strong> <em className="italic">raqamli yechimlar</em>
               </h1>
@@ -52,7 +52,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="mx-auto mb-12 max-w-2xl text-lg text-muted-foreground"
+              className="mx-auto mb-12 max-w-2xl text-base text-muted-foreground"
             >
               O‘zbekiston bo‘ylab biznes va tashkilotlar uchun veb-sayt, mobil ilova va IT xizmatlar. Tez, ishonchli va moslashuvchan raqamli yechimlar.
             </motion.p>

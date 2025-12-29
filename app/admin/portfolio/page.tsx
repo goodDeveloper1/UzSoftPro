@@ -167,7 +167,7 @@ export default function AdminPortfolio() {
           <h1 className="text-lg font-semibold text-foreground">Portfolio loyihalar</h1>
           <Button onClick={() => setIsAdding(true)} size="sm">
             <Plus className="w-4 h-4 mr-2" />
-            Qo'shish
+            Qo&apos;shish
           </Button>
         </div>
       </header>
@@ -176,7 +176,7 @@ export default function AdminPortfolio() {
         {isAdding && (
           <Card className="bg-card/50 backdrop-blur-sm border-border/50 mb-6">
             <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Yangi loyiha qo'shish</h2>
+              <h2 className="text-xl font-semibold mb-4">Yangi loyiha qo&apos;shish</h2>
               <div className="space-y-4">
                 <div>
                   <Label>Sarlavha</Label>
@@ -308,7 +308,9 @@ export default function AdminPortfolio() {
                   </div>
                 ) : (
                   <>
-                    <img src={project.image || "/placeholder.svg"} alt={project.title} className="w-full h-48 object-cover rounded-lg mb-4" />
+                    <div className="relative w-full h-48 mb-4">
+                      <img src={project.image || "/placeholder.svg"} alt={project.title} className="w-full h-full object-cover rounded-lg" />
+                    </div>
                     <h3 className="font-semibold text-lg mb-2">{project.title}</h3>
                     <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
                     <div className="mb-4">

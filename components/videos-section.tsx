@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { Play, Pause, Volume2, VolumeX, X, ChevronLeft, ChevronRight, Send, MessageCircle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -8,12 +8,14 @@ interface Video {
   id: number
   title: string
   description: string
-  video_url: string
-  thumbnail: string
+  videoUrl: string
+  thumbnail: string | null
   category: string
-  duration: number
+  duration: number | null
   views: number
-  created_at: string
+  isActive: number
+  createdAt: string
+  updatedAt: string
 }
 
 interface Comment {
@@ -21,7 +23,7 @@ interface Comment {
   video_id: number
   comment: string
   author_name: string
-  created_at: string
+  createdAt: string
 }
 
 export function VideosSection() {
@@ -43,19 +45,7 @@ export function VideosSection() {
 
   useEffect(() => {
     fetchVideos()
-    deleteOldVideos()
   }, [])
-
-  useEffect(() => {
-    if (showFullscreen && videoRef.current) {
-      videoRef.current.play().catch(console.error)
-      setIsPlaying(true)
-      startProgressTracking()
-    } else {
-      stopProgressTracking()
-    }
-    return () => stopProgressTracking()
-  }, [showFullscreen, currentVideoIndex])
 
   useEffect(() => {
     if (showFullscreen && videos[currentVideoIndex]) {
@@ -71,7 +61,14 @@ export function VideosSection() {
     }
   }, [comments, showComments])
 
-  const startProgressTracking = () => {
+  const stopProgressTracking = useCallback(() => {
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current)
+      progressIntervalRef.current = null
+    }
+  }, [])
+
+  const startProgressTracking = useCallback(() => {
     stopProgressTracking()
     if (videoRef.current && videos[currentVideoIndex]) {
       progressIntervalRef.current = setInterval(() => {
@@ -82,36 +79,14 @@ export function VideosSection() {
         }
       }, 100)
     }
-  }
-
-  const stopProgressTracking = () => {
-    if (progressIntervalRef.current) {
-      clearInterval(progressIntervalRef.current)
-      progressIntervalRef.current = null
-    }
-  }
-
-  const deleteOldVideos = async () => {
-    try {
-      await fetch("/api/videos/cleanup", { method: "POST" })
-      fetchVideos()
-    } catch (error) {
-      console.error("Failed to cleanup old videos:", error)
-    }
-  }
+  }, [videos, currentVideoIndex, stopProgressTracking])
 
   const fetchVideos = async () => {
     try {
       const response = await fetch("/api/videos")
       const data = await response.json()
       if (data.success) {
-        const now = new Date()
-        const filteredVideos = data.data.filter((video: Video) => {
-          const videoDate = new Date(video.created_at)
-          const hoursDiff = (now.getTime() - videoDate.getTime()) / (1000 * 60 * 60)
-          return hoursDiff < 24
-        })
-        setVideos(filteredVideos)
+        setVideos(data.data)
       }
     } catch (error) {
       console.error("Failed to fetch videos:", error)
@@ -154,7 +129,7 @@ export function VideosSection() {
           video_id: videos[currentVideoIndex].id,
           comment: commentText,
           author_name: "Anonim",
-          created_at: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
         }
         setComments([tempComment, ...comments])
         setNewComment("")
@@ -255,11 +230,22 @@ export function VideosSection() {
 
     window.addEventListener("keydown", handleKeyPress)
     return () => window.removeEventListener("keydown", handleKeyPress)
-  }, [showFullscreen, currentVideoIndex, isPlaying])
+  }, [showFullscreen, currentVideoIndex, isPlaying, handleNext, handlePrev, handlePlayPause])
+
+  useEffect(() => {
+    if (showFullscreen && videoRef.current) {
+      videoRef.current.play().catch(console.error)
+      setIsPlaying(true)
+      startProgressTracking()
+    } else {
+      stopProgressTracking()
+    }
+    return () => stopProgressTracking()
+  }, [showFullscreen, currentVideoIndex, startProgressTracking, stopProgressTracking])
 
   if (isLoading) {
     return (
-      <section id="videos" className="sticky top-[88px] z-[100] bg-black/95 backdrop-blur-md border-b border-white/10 py-3 -mx-4 px-4">
+      <section id="videos" className="sticky top-[88px] z-[100] py-3 -mx-4 px-4 mt-8">
         <div className="mx-auto max-w-7xl">
           <div className="text-center text-muted-foreground text-sm">Yuklanmoqda...</div>
         </div>
@@ -275,7 +261,7 @@ export function VideosSection() {
 
   return (
     <>
-      <section id="videos" className="sticky top-[88px] z-[100] bg-black/95 backdrop-blur-md border-b border-white/10 py-3 -mx-4 px-4 mb-8">
+      <section id="videos" className="sticky top-[88px] z-[100] py-3 -mx-4 px-4 mt-8">
         <div className="mx-auto max-w-7xl">
           <div className="flex justify-center gap-3 md:gap-4 overflow-x-auto pb-2 scrollbar-hide">
             {videos.map((video, index) => (
@@ -314,7 +300,7 @@ export function VideosSection() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             ref={containerRef}
-            className="fixed inset-0 z-[50] bg-black flex items-center justify-center"
+            className="fixed inset-0 z-[10000] bg-black flex items-center justify-center"
             onClick={(e) => {
               if (e.target === containerRef.current) {
                 setShowFullscreen(false)
@@ -363,11 +349,12 @@ export function VideosSection() {
               <div className="relative w-full aspect-[9/16] max-h-[90vh] bg-black rounded-lg overflow-hidden shadow-2xl">
                 <video
                   ref={videoRef}
-                  src={currentVideo.video_url}
+                  src={currentVideo.videoUrl}
                   className="w-full h-full object-contain"
                   loop={false}
                   muted={isMuted}
                   playsInline
+                  
                   onPlay={() => {
                     setIsPlaying(true)
                     startProgressTracking()
@@ -438,7 +425,7 @@ export function VideosSection() {
                     <p className="text-white text-sm mb-3 line-clamp-2">{currentVideo.description}</p>
                   )}
                   <div className="flex items-center justify-between text-white/80 text-xs">
-                    <span>{currentVideo.views} ko'rish</span>
+                    <span>{currentVideo.views} ko&apos;rish</span>
                     {currentVideo.duration && <span>{formatTime(currentVideo.duration)}</span>}
                   </div>
                 </div>
@@ -480,7 +467,7 @@ export function VideosSection() {
                   {comments.length === 0 ? (
                     <div className="text-center py-8">
                       <MessageCircle className="w-12 h-12 text-white/20 mx-auto mb-3" />
-                      <p className="text-white/50 text-sm">Hozircha commentlar yo'q</p>
+                      <p className="text-white/50 text-sm">Hozircha commentlar yo&apos;q</p>
                     </div>
                   ) : (
                     comments.map((comment, index) => (
@@ -500,7 +487,7 @@ export function VideosSection() {
                             <div className="flex items-center gap-2 mb-1.5">
                               <span className="text-white font-semibold text-sm">{comment.author_name}</span>
                               <span className="text-white/40 text-xs">•</span>
-                              <span className="text-white/50 text-xs">{formatTimeAgo(comment.created_at)}</span>
+                              <span className="text-white/50 text-xs">{formatTimeAgo(comment.createdAt)}</span>
                             </div>
                             <p className="text-white/90 text-sm leading-relaxed break-words">{comment.comment}</p>
                           </div>

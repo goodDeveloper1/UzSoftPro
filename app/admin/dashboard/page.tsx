@@ -5,7 +5,12 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, MessageSquare, Briefcase, LogOut, Settings, Video, MessageCircle } from "lucide-react"
+import { Users, MessageSquare, Briefcase, LogOut, Video, MessageCircle } from "lucide-react"
+
+interface Comment {
+  id: number
+  is_approved: number
+}
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -33,7 +38,7 @@ export default function AdminDashboard() {
       fetch("/api/admin/comments").then((r) => r.json()),
     ]).then(([testimonials, team, portfolio, videos, comments]) => {
       const allComments = comments.data || []
-      const pending = allComments.filter((c: any) => c.is_approved === 0).length
+      const pending = allComments.filter((c: Comment) => c.is_approved === 0).length
       setStats({
         testimonials: testimonials.data?.length || 0,
         team: team.data?.length || 0,
@@ -104,12 +109,12 @@ export default function AdminDashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="w-5 h-5 text-primary" />
-                Jamoa a'zolari
+                Jamoa a&apos;zolari
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-foreground mb-2">{stats.team}</div>
-              <p className="text-muted-foreground text-sm">Jami a'zolar</p>
+              <p className="text-muted-foreground text-sm">Jami a&apos;zolar</p>
               <Link href="/admin/team">
                 <Button className="mt-4 w-full" variant="outline">
                   Boshqarish

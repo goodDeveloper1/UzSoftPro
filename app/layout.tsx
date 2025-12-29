@@ -4,7 +4,7 @@ import type { Metadata } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import "./globals.css"
-import { FollowerPointerCard, FollowPointer } from "@/components/following-pointer"
+import { FollowerPointerCard } from "@/components/following-pointer"
 
 export const metadata: Metadata = {
   title: "UzsoftPro - Professional Raqamli Yechimlar",

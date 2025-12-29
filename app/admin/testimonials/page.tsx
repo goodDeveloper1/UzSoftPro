@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ArrowLeft, Plus, Edit, Trash2, Save, X, Upload, Loader2 } from "lucide-react"
+import { ArrowLeft, Plus, Edit, Trash2, Save, X, Loader2 } from "lucide-react"
 
 interface Testimonial {
   id: number
@@ -170,7 +170,7 @@ export default function AdminTestimonials() {
           <h1 className="text-lg font-semibold text-foreground">Mijozlar fikri</h1>
           <Button onClick={() => setIsAdding(true)} size="sm">
             <Plus className="w-4 h-4 mr-2" />
-            Qo'shish
+            Qo&apos;shish
           </Button>
         </div>
       </header>
@@ -179,7 +179,7 @@ export default function AdminTestimonials() {
         {isAdding && (
           <Card className="bg-card/50 backdrop-blur-sm border-border/50 mb-6">
             <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Yangi fikr qo'shish</h2>
+              <h2 className="text-xl font-semibold mb-4">Yangi fikr qo&apos;shish</h2>
               <div className="space-y-4">
                 <div>
                   <Label>Ism</Label>
@@ -285,7 +285,7 @@ export default function AdminTestimonials() {
                   <>
                     <p className="text-muted-foreground mb-4">{testimonial.body}</p>
                     <div className="flex items-center gap-3 mb-4">
-                      <img src={testimonial.img || "/placeholder.svg"} alt={testimonial.name} className="w-10 h-10 rounded-full" />
+                      <img src={testimonial.img || "/placeholder.svg"} alt={testimonial.name} width="40" height="40" className="rounded-full" />
                       <div>
                         <div className="font-semibold">{testimonial.name}</div>
                         <div className="text-sm text-muted-foreground">{testimonial.username}</div>
